@@ -1,0 +1,29 @@
+name: Daily Fact Bot
+
+on:
+  schedule:
+    # Runs at 10:15 UTC, which is 15:45 IST (UTC+5:30)
+    - cron: "15 10 * * *"
+
+jobs:
+  run-daily-fact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install openai requests certifi
+
+      - name: Run Daily Fact Bot
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python daily_fact_bot.py
